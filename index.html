@@ -2,14 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Compound Interest Calculator | Free Financial Tool</title>
-    <meta name="description" content="Calculate your investment growth with our free Compound Interest Calculator. Features multi-currency support, inflation adjustment, and Excel export.">
+    <title>Compound Interest Calculator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        /* --- CSS VARIABLES (THEMING) --- */
         :root {
             --bg-color: #f8f9fa;
             --container-bg: #ffffff;
@@ -22,7 +19,7 @@
             --card-bg: #f8faff;
             --chart-grid: #f3f4f6;
             --chart-text: #6b7280;
-            --shadow: 0 10px 25px rgba(0,0,0,0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
         [data-theme="dark"] {
@@ -37,137 +34,137 @@
             --card-bg: #1f2937;
             --chart-grid: #374151;
             --chart-text: #9ca3af;
-            --shadow: 0 10px 25px rgba(0,0,0,0.3);
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
         }
 
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
             padding: 20px; 
             background-color: var(--bg-color); 
             color: var(--text-main);
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            margin: 0;
         }
 
         .container { 
-            max-width: 700px; 
+            max-width: 800px; 
             margin: 0 auto; 
             background: var(--container-bg); 
             padding: 40px; 
-            border-radius: 16px; 
+            border-radius: 12px; 
             box-shadow: var(--shadow); 
         }
 
-        /* HEADER & CONTROLS */
         .header-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 10px;
+            gap: 15px;
         }
         
-        h2 { margin: 0; font-weight: 800; letter-spacing: -0.5px; }
+        h2 { margin: 0; font-weight: 700; font-size: 1.5rem; }
 
         .controls { display: flex; gap: 10px; align-items: center; }
 
         select.lang-select {
-            padding: 8px;
+            padding: 8px 12px;
             border: 1px solid var(--border-color);
             border-radius: 6px;
             background: var(--input-bg);
             color: var(--text-main);
             cursor: pointer;
+            font-size: 0.9rem;
         }
 
         .theme-toggle {
             background: transparent;
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: var(--text-main);
+            transition: background 0.2s;
         }
         .theme-toggle:hover { background-color: var(--border-color); }
 
-        /* INPUTS */
         .row { display: flex; gap: 20px; margin-bottom: 20px; }
         .col { flex: 1; }
         
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-muted); font-size: 0.9rem; }
+        label { display: block; margin-bottom: 6px; font-weight: 500; color: var(--text-muted); font-size: 0.875rem; }
         
         input, select:not(.lang-select) { 
             width: 100%; 
-            padding: 14px; 
+            padding: 12px; 
             border: 1px solid var(--border-color); 
-            border-radius: 8px; 
-            font-size: 16px; 
+            border-radius: 6px; 
+            font-size: 1rem; 
             box-sizing: border-box; 
             background-color: var(--input-bg); 
             color: var(--text-main); 
+            transition: border-color 0.15s;
         }
         input:focus, select:focus { border-color: var(--primary-color); outline: none; }
         
-        /* ACTION BUTTONS */
         .btn-calc { 
             width: 100%; 
-            padding: 16px; 
+            padding: 14px; 
             background-color: var(--primary-color); 
             color: white; 
             border: none; 
-            border-radius: 8px; 
+            border-radius: 6px; 
             cursor: pointer; 
-            font-size: 16px; 
-            font-weight: 700; 
+            font-size: 1rem; 
+            font-weight: 600; 
             margin-top: 10px; 
-            transition: background 0.2s;
+            transition: background-color 0.2s;
         }
         .btn-calc:hover { background-color: var(--primary-hover); }
 
         .btn-group { display: flex; gap: 10px; margin-top: 20px; }
         .btn-download { 
             flex: 1; 
-            padding: 12px; 
+            padding: 10px; 
             background-color: var(--bg-color); 
             color: var(--text-muted); 
             border: 1px solid var(--border-color); 
-            border-radius: 8px; 
+            border-radius: 6px; 
             cursor: pointer; 
-            font-size: 14px; 
-            font-weight: 600; 
+            font-size: 0.875rem; 
+            font-weight: 500; 
             transition: all 0.2s; 
         }
         .btn-download:hover { background-color: var(--border-color); color: var(--text-main); }
         
-        /* SUMMARY CARDS */
-        .summary-grid { display: flex; gap: 15px; margin-bottom: 30px; margin-top: 20px; }
+        .summary-grid { display: flex; gap: 15px; margin-bottom: 30px; margin-top: 25px; }
         .summary-card { 
             flex: 1; 
             background: var(--card-bg); 
             padding: 15px; 
-            border-radius: 10px; 
+            border-radius: 8px; 
             text-align: center; 
             border: 1px solid var(--border-color); 
         }
-        .summary-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; margin-bottom: 5px; text-transform: uppercase; }
-        .summary-value { font-size: 1.3rem; font-weight: 800; color: var(--text-main); }
+        .summary-label { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .summary-value { font-size: 1.25rem; font-weight: 700; color: var(--text-main); }
         .summary-value.highlight { color: var(--primary-color); }
         .summary-value.green { color: #10b981; }
 
-        .chart-container { position: relative; height: 350px; width: 100%; margin-top: 20px; }
+        .chart-container { position: relative; height: 400px; width: 100%; margin-top: 20px; }
         
         .footer { text-align: center; margin-top: 40px; color: var(--text-muted); font-size: 0.8rem; }
 
-        /* MOBILE RESPONSIVE */
         @media (max-width: 600px) {
             .row, .summary-grid, .btn-group { flex-direction: column; }
             .col { margin-bottom: 15px; }
             .container { padding: 20px; }
+            .header-row { flex-direction: column; align-items: flex-start; }
+            .controls { width: 100%; justify-content: space-between; }
         }
     </style>
 </head>
@@ -178,14 +175,14 @@
         <h2 id="txt-title">Compound Interest Calculator</h2>
         <div class="controls">
             <select id="lang-select" onchange="changeLanguage()" class="lang-select">
-                <option value="en">🇬🇧 English</option>
-                <option value="es">🇪🇸 Español</option>
-                <option value="fr">🇫🇷 Français</option>
-                <option value="de">🇩🇪 Deutsch</option>
-                <option value="ru">🇷🇺 Русский</option>
-                <option value="zh">🇨🇳 简体中文</option>
-                <option value="hi">🇮🇳 हिन्दी</option>
-                <option value="ar">🇸🇦 العربية</option>
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="de">Deutsch</option>
+                <option value="ru">Русский</option>
+                <option value="zh">简体中文</option>
+                <option value="hi">हिन्दी</option>
+                <option value="ar">العربية</option>
             </select>
             <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn">🌙</button>
         </div>
@@ -256,45 +253,44 @@
     </div>
     
     <div class="btn-group">
-        <button class="btn-download" onclick="downloadCSV()" id="btn-csv">Download CSV Report</button>
-        <button class="btn-download" onclick="downloadChart()" id="btn-img">Download Graph Image</button>
+        <button class="btn-download" onclick="downloadCSV()" id="btn-csv">Download CSV</button>
+        <button class="btn-download" onclick="downloadChart()" id="btn-img">Download Chart</button>
     </div>
 
 </div>
 
 <div class="footer">
-    &copy; <span id="copyright-year"></span> <span id="footer-brand">Compound Interest Calculator</span>. All rights reserved.
+    &copy; <span id="copyright-year"></span>
 </div>
 
 <script>
     let myChart = null;
     let isDarkMode = false;
     
-    // --- DICTIONARY ---
     const translations = {
         en: {
-            title: "Compound Interest Calculator", currency: "Currency", principal: "Initial Deposit", frequency: "Frequency", contribution: "Contribution", rate: "Interest Rate", years: "Years to Grow", calculate: "Calculate Growth", invested: "Total Invested", interest: "Interest Earned", total: "Total Value", csv: "Download CSV Report", img: "Download Graph Image", week: "Weekly", month: "Monthly", year: "Annually", chartLabel1: "Total Value", chartLabel2: "Principal Invested", chartYear: "Year", brand: "Compound Interest Calculator"
+            title: "Compound Interest Calculator", currency: "Currency", principal: "Initial Deposit", frequency: "Frequency", contribution: "Contribution", rate: "Interest Rate", years: "Years to Grow", calculate: "Calculate Growth", invested: "Total Invested", interest: "Interest Earned", total: "Total Value", csv: "Download CSV", img: "Download Chart", week: "Weekly", month: "Monthly", year: "Annually", chartLabel1: "Total Value", chartLabel2: "Principal Invested", chartYear: "Year"
         },
         es: {
-            title: "Calculadora de Interés Compuesto", currency: "Moneda", principal: "Depósito Inicial", frequency: "Frecuencia", contribution: "Contribución", rate: "Tasa de Interés", years: "Años a Crecer", calculate: "Calcular Crecimiento", invested: "Total Invertido", interest: "Interés Ganado", total: "Valor Total", csv: "Descargar CSV", img: "Descargar Imagen", week: "Semanal", month: "Mensual", year: "Anual", chartLabel1: "Valor Total", chartLabel2: "Capital Invertido", chartYear: "Año", brand: "Calculadora de Interés Compuesto"
+            title: "Calculadora de Interés Compuesto", currency: "Moneda", principal: "Depósito Inicial", frequency: "Frecuencia", contribution: "Contribución", rate: "Tasa de Interés", years: "Años a Crecer", calculate: "Calcular Crecimiento", invested: "Total Invertido", interest: "Interés Ganado", total: "Valor Total", csv: "Descargar CSV", img: "Descargar Imagen", week: "Semanal", month: "Mensual", year: "Anual", chartLabel1: "Valor Total", chartLabel2: "Capital Invertido", chartYear: "Año"
         },
         fr: {
-            title: "Calculatrice d'Intérêts Composés", currency: "Devise", principal: "Dépôt Initial", frequency: "Fréquence", contribution: "Contribution", rate: "Taux d'Intérêt", years: "Durée (Années)", calculate: "Calculer", invested: "Total Investi", interest: "Intérêts Gagnés", total: "Valeur Totale", csv: "Télécharger CSV", img: "Télécharger Image", week: "Hebdomadaire", month: "Mensuel", year: "Annuel", chartLabel1: "Valeur Totale", chartLabel2: "Capital Investi", chartYear: "Année", brand: "Calculatrice d'Intérêts Composés"
+            title: "Calculatrice d'Intérêts Composés", currency: "Devise", principal: "Dépôt Initial", frequency: "Fréquence", contribution: "Contribution", rate: "Taux d'Intérêt", years: "Durée (Années)", calculate: "Calculer", invested: "Total Investi", interest: "Intérêts Gagnés", total: "Valeur Totale", csv: "Télécharger CSV", img: "Télécharger Image", week: "Hebdomadaire", month: "Mensuel", year: "Annuel", chartLabel1: "Valeur Totale", chartLabel2: "Capital Investi", chartYear: "Année"
         },
         de: {
-            title: "Zinseszinsrechner", currency: "Währung", principal: "Startkapital", frequency: "Häufigkeit", contribution: "Sparrate", rate: "Zinssatz", years: "Laufzeit (Jahre)", calculate: "Berechnen", invested: "Investiertes Kapital", interest: "Gewonnene Zinsen", total: "Gesamtwert", csv: "CSV Herunterladen", img: "Bild Herunterladen", week: "Wöchentlich", month: "Monatlich", year: "Jährlich", chartLabel1: "Gesamtwert", chartLabel2: "Investiertes Kapital", chartYear: "Jahr", brand: "Zinseszinsrechner"
+            title: "Zinseszinsrechner", currency: "Währung", principal: "Startkapital", frequency: "Häufigkeit", contribution: "Sparrate", rate: "Zinssatz", years: "Laufzeit (Jahre)", calculate: "Berechnen", invested: "Investiertes Kapital", interest: "Gewonnene Zinsen", total: "Gesamtwert", csv: "CSV Herunterladen", img: "Bild Herunterladen", week: "Wöchentlich", month: "Monatlich", year: "Jährlich", chartLabel1: "Gesamtwert", chartLabel2: "Investiertes Kapital", chartYear: "Jahr"
         },
         ru: {
-            title: "Калькулятор Сложного Процента", currency: "Валюта", principal: "Начальный Депозит", frequency: "Частота", contribution: "Взнос", rate: "Процентная Ставка", years: "Срок (Лет)", calculate: "Рассчитать", invested: "Всего Вложено", interest: "Заработано Процентов", total: "Итоговая Сумма", csv: "Скачать CSV", img: "Скачать График", week: "Еженедельно", month: "Ежемесячно", year: "Ежегодно", chartLabel1: "Итоговая Сумма", chartLabel2: "Вложенный Капитал", chartYear: "Год", brand: "Калькулятор Сложного Процента"
+            title: "Калькулятор Сложного Процента", currency: "Валюта", principal: "Начальный Депозит", frequency: "Частота", contribution: "Взнос", rate: "Процентная Ставка", years: "Срок (Лет)", calculate: "Рассчитать", invested: "Всего Вложено", interest: "Заработано Процентов", total: "Итоговая Сумма", csv: "Скачать CSV", img: "Скачать График", week: "Еженедельно", month: "Ежемесячно", year: "Ежегодно", chartLabel1: "Итоговая Сумма", chartLabel2: "Вложенный Капитал", chartYear: "Год"
         },
         zh: {
-            title: "复利计算器", currency: "货币", principal: "初始存款", frequency: "频率", contribution: "定期供款", rate: "年利率", years: "投资年期", calculate: "计算增长", invested: "总投资额", interest: "赚取利息", total: "总价值", csv: "下载 CSV 报告", img: "下载图表", week: "每周", month: "每月", year: "每年", chartLabel1: "总价值", chartLabel2: "本金投入", chartYear: "年", brand: "复利计算器"
+            title: "复利计算器", currency: "货币", principal: "初始存款", frequency: "频率", contribution: "定期供款", rate: "年利率", years: "投资年期", calculate: "计算增长", invested: "总投资额", interest: "赚取利息", total: "总价值", csv: "下载 CSV 报告", img: "下载图表", week: "每周", month: "每月", year: "每年", chartLabel1: "总价值", chartLabel2: "本金投入", chartYear: "年"
         },
         hi: {
-            title: "चक्रवृद्धि ब्याज कैलकुलेटर", currency: "मुद्रा", principal: "प्रारंभिक जमा", frequency: "आवृत्ति", contribution: "योगदान", rate: "ब्याज दर", years: "अवधि (वर्ष)", calculate: "गणना करें", invested: "कुल निवेश", interest: "अर्जित ब्याज", total: "कुल मूल्य", csv: "CSV डाउनलोड करें", img: "ग्राफ डाउनलोड करें", week: "साप्ताहिक", month: "मासिक", year: "वार्षिक", chartLabel1: "कुल मूल्य", chartLabel2: "निवेश मूलधन", chartYear: "वर्ष", brand: "चक्रवृद्धि ब्याज कैलकुलेटर"
+            title: "चक्रवृद्धि ब्याज कैलकुलेटर", currency: "मुद्रा", principal: "प्रारंभिक जमा", frequency: "आवृत्ति", contribution: "योगदान", rate: "ब्याज दर", years: "अवधि (वर्ष)", calculate: "गणना करें", invested: "कुल निवेश", interest: "अर्जित ब्याज", total: "कुल मूल्य", csv: "CSV डाउनलोड करें", img: "ग्राफ डाउनलोड करें", week: "साप्ताहिक", month: "मासिक", year: "वार्षिक", chartLabel1: "कुल मूल्य", chartLabel2: "निवेश मूलधन", chartYear: "वर्ष"
         },
         ar: {
-            title: "حاسبة الفائدة المركبة", currency: "العملة", principal: "الوديعة الأولية", frequency: "التكرار", contribution: "مبلغ المساهمة", rate: "سعر الفائدة", years: "المدة (سنوات)", calculate: "احسب النمو", invested: "إجمالي المستثمر", interest: "الفائدة المكتسبة", total: "القيمة الإجمالية", csv: "تحميل تقرير CSV", img: "تحميل صورة الرسم البياني", week: "أسبوعي", month: "شهري", year: "سنوي", chartLabel1: "القيمة الإجمالية", chartLabel2: "رأس المال المستثمر", chartYear: "سنة", brand: "حاسبة الفائدة المركبة"
+            title: "حاسبة الفائدة المركبة", currency: "العملة", principal: "الوديعة الأولية", frequency: "التكرار", contribution: "مبلغ المساهمة", rate: "سعر الفائدة", years: "المدة (سنوات)", calculate: "احسب النمو", invested: "إجمالي المستثمر", interest: "الفائدة المكتسبة", total: "القيمة الإجمالية", csv: "تحميل تقرير CSV", img: "تحميل صورة الرسم البياني", week: "أسبوعي", month: "شهري", year: "سنوي", chartLabel1: "القيمة الإجمالية", chartLabel2: "رأس المال المستثمر", chartYear: "سنة"
         }
     };
 
@@ -337,7 +333,6 @@
         document.getElementById('opt-week').innerText = t.week;
         document.getElementById('opt-month').innerText = t.month;
         document.getElementById('opt-year').innerText = t.year;
-        document.getElementById('footer-brand').innerText = t.brand;
         calculateAndDraw();
     }
 
